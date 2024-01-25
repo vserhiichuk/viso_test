@@ -12,18 +12,22 @@ const MarkerPopup: React.FC<Props> = ({
   setSelectedMarker,
   handleDeleteMarker,
 }) => {
+  const handlePopupClose = () => {
+    setSelectedMarker(null);
+  };
+
   return (
     <InfoWindow
       position={{
         lat: selectedMarker.lat,
         lng: selectedMarker.lng,
       }}
-      onCloseClick={() => setSelectedMarker(null)}
+      onCloseClick={handlePopupClose}
     >
       <div>
         <h5>Назва маркеру: {selectedMarker.label}</h5>
 
-        <button onClick={() => handleDeleteMarker()}>Видалити маркер</button>
+        <button onClick={handleDeleteMarker}>Видалити маркер</button>
       </div>
     </InfoWindow>
   );

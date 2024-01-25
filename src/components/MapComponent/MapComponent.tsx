@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
-import {
-  collection,
-  setDoc,
-  doc,
-  getDocs,
-  deleteDoc,
-} from "firebase/firestore";
+import { collection, getDocs, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import {
+  DEFAULT_VALUE_COORDINATES,
+  DEFAULT_VALUE_ZOOM_MAP,
   INITIAL_CENTER,
-  INITIAL_VALUE_COORDINATES,
   LABELS,
   MAP_CONTAINER_STYLE,
 } from "../../utils/_variables";
 import { MarkerType } from "../../types/MarkerType";
+import { updateFirebaseData } from "../../firebaseUtils";
 import MarkerList from "../MarkerList/MarkerList";
 import MarkerPopup from "../MarkerPopup/MarkerPopup";
 
@@ -25,30 +21,18 @@ const MapComponent: React.FC = () => {
   const [selectedMarker, setSelectedMarker] = useState<MarkerType | null>(null);
 
   useEffect(() => {
-    const updateFirebaseData = async () => {
-      const firebaseData = markers.map(({ lat, lng }) => ({
-        Location: { Lat: lat, Long: lng },
-        Timestamp: new Date(),
-        Next: markers.length + 1,
-      }));
-
-      const questCollectionRef = collection(db, "markers");
-
-      await Promise.all(
-        firebaseData.map(async (data, index) => {
-          await setDoc(doc(questCollectionRef, `Quest ${index + 1}`), data);
-        })
-      );
+    const updateFirebase = async () => {
+      await updateFirebaseData(markers);
     };
 
-    updateFirebaseData().then((result) => console.log(result));
+    updateFirebase().then((result) => console.log(result));
   }, [markers]);
 
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
     const newMarker = {
       id: Date.now(),
-      lat: event.latLng?.lat() || INITIAL_VALUE_COORDINATES,
-      lng: event.latLng?.lng() || INITIAL_VALUE_COORDINATES,
+      lat: event.latLng?.lat() || DEFAULT_VALUE_COORDINATES,
+      lng: event.latLng?.lng() || DEFAULT_VALUE_COORDINATES,
       label: LABELS[LABEL_INDEX++ % LABELS.length],
     };
 
@@ -61,15 +45,15 @@ const MapComponent: React.FC = () => {
 
   const handleMarkerDrag = (
     marker: MarkerType,
-    e: google.maps.MapMouseEvent
+    event: google.maps.MapMouseEvent
   ) => {
     setMarkers((prevState) =>
       prevState.map((prevMarker) => {
         if (prevMarker.id === marker.id) {
           return {
             ...prevMarker,
-            lat: e.latLng?.lat() || INITIAL_VALUE_COORDINATES,
-            lng: e.latLng?.lng() || INITIAL_VALUE_COORDINATES,
+            lat: event.latLng?.lat() || DEFAULT_VALUE_COORDINATES,
+            lng: event.latLng?.lng() || DEFAULT_VALUE_COORDINATES,
           };
         }
         return prevMarker;
@@ -103,7 +87,7 @@ const MapComponent: React.FC = () => {
       <GoogleMap
         mapContainerStyle={MAP_CONTAINER_STYLE}
         center={INITIAL_CENTER}
-        zoom={8}
+        zoom={DEFAULT_VALUE_ZOOM_MAP}
         onClick={handleMapClick}
       >
         <MarkerList
