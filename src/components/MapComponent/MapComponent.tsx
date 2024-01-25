@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
-import { collection, setDoc, doc, getDocs, deleteDoc } from "firebase/firestore";
+import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import {
+  collection,
+  setDoc,
+  doc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase";
-import { INITIAL_CENTER, INITIAL_VALUE_COORDINATES, LABELS, MAP_CONTAINER_STYLE } from "../../utils/_variables";
+import {
+  INITIAL_CENTER,
+  INITIAL_VALUE_COORDINATES,
+  LABELS,
+  MAP_CONTAINER_STYLE,
+} from "../../utils/_variables";
+import { MarkerType } from "../../types/MarkerType";
+import MarkerList from "../MarkerList/MarkerList";
+import MarkerPopup from "../MarkerPopup/MarkerPopup";
 
 let LABEL_INDEX = 0;
-
-interface MarkerType {
-  id: number;
-  lat: number;
-  lng: number;
-  label: string;
-}
 
 const MapComponent: React.FC = () => {
   const [markers, setMarkers] = useState<MarkerType[]>([]);
@@ -34,7 +41,7 @@ const MapComponent: React.FC = () => {
       );
     };
 
-    updateFirebaseData().then((result) => console.log(result))
+    updateFirebaseData().then((result) => console.log(result));
   }, [markers]);
 
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
@@ -99,33 +106,18 @@ const MapComponent: React.FC = () => {
         zoom={8}
         onClick={handleMapClick}
       >
-        {markers.map((marker) => (
-          <Marker
-            key={marker.id}
-            position={{ lat: marker.lat, lng: marker.lng }}
-            label={marker.label}
-            draggable={true}
-            onClick={() => handleMarkerClick(marker)}
-            onDragEnd={(e) => handleMarkerDrag(marker, e)}
-          />
-        ))}
+        <MarkerList
+          markers={markers}
+          handleMarkerClick={handleMarkerClick}
+          handleMarkerDrag={handleMarkerDrag}
+        />
 
         {selectedMarker && (
-          <InfoWindow
-            position={{
-              lat: selectedMarker.lat,
-              lng: selectedMarker.lng,
-            }}
-            onCloseClick={() => setSelectedMarker(null)}
-          >
-            <div>
-              <h5>Назва маркеру: {selectedMarker.label}</h5>
-
-              <button onClick={() => handleDeleteMarker()}>
-                Видалити маркер
-              </button>
-            </div>
-          </InfoWindow>
+          <MarkerPopup
+            selectedMarker={selectedMarker}
+            setSelectedMarker={setSelectedMarker}
+            handleDeleteMarker={handleDeleteMarker}
+          />
         )}
       </GoogleMap>
 
@@ -134,8 +126,8 @@ const MapComponent: React.FC = () => {
           onClick={() => handleDeleteAllMarkers()}
           style={{
             position: "absolute",
-            top: '10px',
-            left: '205px',
+            top: "10px",
+            left: "205px",
           }}
         >
           Delete All markers
