@@ -26,7 +26,7 @@ export const MapComponent: React.FC = () => {
       await updateFirebaseData(markers);
     };
 
-    updateFirebase().then((result) => console.log(result));
+    updateFirebase();
   }, [markers]);
 
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
@@ -40,11 +40,11 @@ export const MapComponent: React.FC = () => {
     setMarkers((prevState) => [...prevState, newMarker]);
   };
 
-  const handleMarkerClick = (marker: MarkerType) => {
+  const handleClickMarker = (marker: MarkerType) => {
     setSelectedMarker(marker);
   };
 
-  const handleMarkerDrag = (
+  const handleDragMarker = (
     marker: MarkerType,
     event: google.maps.MapMouseEvent
   ) => {
@@ -93,8 +93,8 @@ export const MapComponent: React.FC = () => {
       >
         <MarkerList
           markers={markers}
-          handleMarkerClick={handleMarkerClick}
-          handleMarkerDrag={handleMarkerDrag}
+          handleClickMarker={handleClickMarker}
+          handleDragMarker={handleDragMarker}
         />
 
         {selectedMarker && (

@@ -3,14 +3,14 @@ import { MarkerType } from "../../types/MarkerType";
 
 interface Props {
   markers: MarkerType[];
-  handleMarkerClick: (marker: MarkerType) => void;
-  handleMarkerDrag: (marker: MarkerType, event: google.maps.MapMouseEvent) => void;
+  handleClickMarker: (marker: MarkerType) => void;
+  handleDragMarker: (marker: MarkerType, event: google.maps.MapMouseEvent) => void;
 }
 
 export const MarkerList: React.FC<Props> = ({
   markers,
-  handleMarkerClick,
-  handleMarkerDrag,
+  handleClickMarker,
+  handleDragMarker,
 }) => {
   return (
     <>
@@ -20,8 +20,8 @@ export const MarkerList: React.FC<Props> = ({
           position={{ lat: marker.lat, lng: marker.lng }}
           label={marker.label}
           draggable={true}
-          onClick={() => handleMarkerClick(marker)}
-          onDragEnd={(event) => handleMarkerDrag(marker, event)}
+          onClick={() => handleClickMarker(marker)}
+          onDragEnd={(event) => handleDragMarker(marker, event)}
         />
       ))}
     </>
