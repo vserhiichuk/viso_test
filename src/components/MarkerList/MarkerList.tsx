@@ -7,7 +7,7 @@ interface Props {
   handleMarkerDrag: (marker: MarkerType, event: google.maps.MapMouseEvent) => void;
 }
 
-const MarkerList: React.FC<Props> = ({
+export const MarkerList: React.FC<Props> = ({
   markers,
   handleMarkerClick,
   handleMarkerDrag,
@@ -27,5 +27,3 @@ const MarkerList: React.FC<Props> = ({
     </>
   );
 };
-
-export default MarkerList;

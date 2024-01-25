@@ -7,7 +7,7 @@ interface Props {
   handleDeleteMarker: () => void;
 }
 
-const MarkerPopup: React.FC<Props> = ({
+export const MarkerPopup: React.FC<Props> = ({
   selectedMarker,
   setSelectedMarker,
   handleDeleteMarker,
@@ -32,5 +32,3 @@ const MarkerPopup: React.FC<Props> = ({
     </InfoWindow>
   );
 };
-
-export default MarkerPopup;

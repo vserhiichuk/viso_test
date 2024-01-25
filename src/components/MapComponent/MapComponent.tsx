@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import { collection, getDocs, deleteDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from 'uuid';
 import { db } from "../../firebase";
 import {
   DEFAULT_VALUE_COORDINATES,
@@ -11,12 +12,12 @@ import {
 } from "../../utils/_variables";
 import { MarkerType } from "../../types/MarkerType";
 import { updateFirebaseData } from "../../firebaseUtils";
-import MarkerList from "../MarkerList/MarkerList";
-import MarkerPopup from "../MarkerPopup/MarkerPopup";
+import { MarkerList } from "../MarkerList";
+import { MarkerPopup } from "../MarkerPopup";
 
 let LABEL_INDEX = 0;
 
-const MapComponent: React.FC = () => {
+export const MapComponent: React.FC = () => {
   const [markers, setMarkers] = useState<MarkerType[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<MarkerType | null>(null);
 
@@ -30,7 +31,7 @@ const MapComponent: React.FC = () => {
 
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
     const newMarker = {
-      id: Date.now(),
+      id: uuidv4(),
       lat: event.latLng?.lat() || DEFAULT_VALUE_COORDINATES,
       lng: event.latLng?.lng() || DEFAULT_VALUE_COORDINATES,
       label: LABELS[LABEL_INDEX++ % LABELS.length],
@@ -120,5 +121,3 @@ const MapComponent: React.FC = () => {
     </LoadScript>
   );
 };
-
-export default MapComponent;
