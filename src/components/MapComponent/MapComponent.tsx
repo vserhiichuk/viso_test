@@ -110,7 +110,7 @@ export const MapComponent: React.FC = () => {
 
       {!!markers.length && (
         <button
-          onClick={() => handleDeleteAllMarkers()}
+          onClick={handleDeleteAllMarkers}
           style={{
             position: "absolute",
             top: "10px",
