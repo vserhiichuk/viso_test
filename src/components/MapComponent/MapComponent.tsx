@@ -8,7 +8,6 @@ import {
   DEFAULT_VALUE_ZOOM_MAP,
   INITIAL_CENTER,
   LABELS,
-  MAP_CONTAINER_STYLE,
 } from "../../utils/_variables";
 import { MarkerType } from "../../types/MarkerType";
 import { updateFirebaseData } from "../../firebaseUtils";
@@ -86,7 +85,10 @@ export const MapComponent: React.FC = () => {
       googleMapsApiKey={`${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`}
     >
       <GoogleMap
-        mapContainerStyle={MAP_CONTAINER_STYLE}
+        mapContainerStyle={{
+          width: "100%",
+          height: "100vh",
+        }}
         center={INITIAL_CENTER}
         zoom={DEFAULT_VALUE_ZOOM_MAP}
         onClick={handleMapClick}
